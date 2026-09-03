@@ -28,7 +28,7 @@ int menu(){
   // Menu to choose either to encrypt, decrpt or attack the message
   int choose;
   printf("Welcome to Caesar Cipher!\n");
-  printf("Menu: \n1. Encrypt \n2. Decrypt \n3. Bruteforce Attack \n4. Exit\nChoose: ");
+  printf("Menu: \n\n1. Encrypt \n2. Decrypt \n3. Bruteforce Attack \n4. Exit\nChoose: ");
   scanf("%d", &choose);
   
   // The functions will be called here
@@ -55,9 +55,9 @@ int menu(){
 void encrypt(){
   // User Input
   char message[200];
+  printf("Enter message: ");
   getchar();
-  printf("Enter message:");
-  fgets("%s", strlen(message), stdin);
+  fgets(message, sizeof(message), stdin);
   message[strlen(message) - 1] = '\0';
 
   // Uppercase
@@ -70,22 +70,23 @@ void encrypt(){
   int letters = 26;
   int messageSize = strlen(message);
 
-  for (int index = 0; messageSize < letters; index++){
+  for (int index = 0;  index < letters; index++){
     if(isalpha(message[index])){
       message[index] = 'A' + (message[index] - 'A' + shift) % letters;
     }
   }
-
+  
   // Encrpted Message Output
-  printf("Here is your encrypted message: \n%s\n", message);
+  printf("Encrypted message: %s \n", message);
 }
+
 
 void decrypt(){
   // User Input
   char code[200];
-  getchar();
   printf("Enter encrypted message:");
-  fgets("%s",strlen(code), stdin);
+  getchar();
+  fgets(code,sizeof(code), stdin);
   code[strlen(code) - 1] = '\0';
 
   // Uppercase
@@ -97,21 +98,24 @@ void decrypt(){
   int shift = 7;
   int letters = 26;
   int messageSize = strlen(code);
-  for (int index = 0; messageSize < letters; index++){
-    code[index] = 'A' + (code[index] - 'A' - shift) % letters;
+
+  for (int index = 0;  index < letters; index++){
+    if(isalpha(code[index])){
+      code[index] = 'A' + (code[index] - 'A' - shift % letters + letters) % letters;
+    }
   }
 
   // Decrypted Message Ouput
-  printf("Here is your decrypted message: \n%s\n", code);
+  printf("Decrypted message: %s \n", code);
 }
 
 
 void bruteForce(){
   // User Input
   char code[200];
-  getchar();
   printf("Enter encrypted message:");
-  fgets("%s",strlen(code), stdin);
+  getchar();
+  fgets(code,sizeof(code), stdin);
   code[strlen(code) - 1] = '\0';
 
   // Uppercase
@@ -123,15 +127,18 @@ void bruteForce(){
   int shift = 0;
   int letters = 26;
   int messageSize = strlen(code);
-  for (int index = 0; messageSize < letters; index++){
-    // Decrytpt
-    code[index] = 'A' + (code[index] - 'A' - shift) % letters;
-    // Increament here instead of another for loop, better optimized
-    shift++;
-    // Each Shift will be printed out
-    printf("Attempt %d: %s\n", index, code);
-  }
+  
+  for (int shift = 1; shift < letters; shift++){
+    char temp[200];
+    strcpy(temp, code);
+    for (int index = 0; index < messageSize; index++){
+      if(isalpha(temp[index])){
+        temp[index] = 'A' + (temp[index] - 'A' - shift + letters) % letters;
+      }
+    }
+  printf("Shift By %d: %s\n", shift, temp);
+}
 
-  // 
-  printf("Check which attempt above cracked the code.");
+  // Find the Correct Message
+  printf("Check which attempt above for the cracked code. \n");
 }
